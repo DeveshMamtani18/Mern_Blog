@@ -50,3 +50,39 @@ export const signup=async (req,res,next) => {
             next(error)
         }
 }
+
+
+
+export const google=async (req,res,next) => {     
+    const {name,email,photourl}=req.body;
+    if (!name||!email||name===''||email===''){
+        next(errorhandler(400,"all fields are required"))
+    }
+    try {
+        const user=await User.findOne({email})
+        if (!user){
+            const generatepassword=Math.random().toString(36).slice(-8) + Math.random().toString(36).slice(-8)
+            const hashedpass=bcryptjs.hashSync(generatepassword,10)
+            const newUser=new User({
+                username:name.toLowerCase().split(' ').join('')+Math.random().toString(36).slice(-5),
+                email,
+                password:hashedpass,
+                photourl
+            })
+            await newUser.save();
+            const token=jwt.sign({id:newUser._id},process.env.JWT_SECRET)
+            const {password,...others}=newUser._doc
+            res.status(200).cookie('access_token',token,{
+                httpOnly:true,
+            }).json("signin succes")
+        }
+        
+        const token=jwt.sign({id:user._id},process.env.JWT_SECRET)
+        const {password,...others}=user._doc
+        res.status(200).cookie('access_token',token,{
+            httpOnly:true,
+        }).json("signin succesful")
+    } catch (error) {
+        next(error)
+    }
+}
