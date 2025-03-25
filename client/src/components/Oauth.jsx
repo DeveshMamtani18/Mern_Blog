@@ -16,6 +16,7 @@ function Oauth() {
         try {
            
             const resultdsfromgoogle=await signInWithPopup(auth,Provider)
+            console.log(resultdsfromgoogle)
             const res = await fetch('/api/auth/google',{
                 method:'POST',
                 headers:{

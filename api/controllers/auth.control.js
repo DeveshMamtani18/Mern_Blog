@@ -7,7 +7,7 @@ export const signup=async (req,res,next) => {
 
 
     if (!username||!email||!password||username===''||email===''||password===''){
-        next(errorhandler(400,"all fields are required"))
+        return next(errorhandler(400,"all fields are required"))
     }
 
     const hashedpass= bcryptjs.hashSync(password,10)
@@ -30,22 +30,23 @@ export const signup=async (req,res,next) => {
     export const signin=async (req,res,next) => {
         const {email,password}=req.body;
         if (!email||!password||email===''||password===''){
-            next(errorhandler(400,"all fields are required"))
+           return next(errorhandler(400,"all fields are required"))
         }
 
         try {
             const validuser=await User.findOne({email})
             if(!validuser){
-                next(errorhandler(400,"invalid credentials"))
+               return next(errorhandler(400,"invalid credentials"))
             }
             const validpass=bcryptjs.compareSync(password,validuser.password)
             if (!validpass){
                return next(errorhandler(400,"invalid credentials"))
             }
             const token=jwt.sign({id:validuser._id},process.env.JWT_SECRET)
+            const { password, ...others } = validuser._doc;
             res.status(200).cookie('access_token',token,{
                 httpOnly:true,
-            }).json("signin succesful")
+            }).json(others)
         } catch (error) {
             next(error)
         }
@@ -59,29 +60,30 @@ export const google=async (req,res,next) => {
         next(errorhandler(400,"all fields are required"))
     }
     try {
-        const user=await User.findOne({email})
+        let user=await User.findOne({email})
         if (!user){
             const generatepassword=Math.random().toString(36).slice(-8) + Math.random().toString(36).slice(-8)
             const hashedpass=bcryptjs.hashSync(generatepassword,10)
+            const cleanPhotoURL = photourl?.replace("s96-c", "s400-c") || photourl;
             const newUser=new User({
                 username:name.toLowerCase().split(' ').join('')+Math.random().toString(36).slice(-5),
                 email,
                 password:hashedpass,
-                photourl
+                photourl:cleanPhotoURL
             })
-            await newUser.save();
-            const token=jwt.sign({id:newUser._id},process.env.JWT_SECRET)
-            const {password,...others}=newUser._doc
+           user = await newUser.save();
+            const token=jwt.sign({id:user._id},process.env.JWT_SECRET)
+            const {password,...others}=user._doc
             res.status(200).cookie('access_token',token,{
                 httpOnly:true,
-            }).json("signin succes")
+            }).json(others)
         }
         
         const token=jwt.sign({id:user._id},process.env.JWT_SECRET)
         const {password,...others}=user._doc
         res.status(200).cookie('access_token',token,{
             httpOnly:true,
-        }).json("signin succesful")
+        }).json(others)
     } catch (error) {
         next(error)
     }
