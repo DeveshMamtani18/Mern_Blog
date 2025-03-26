@@ -19,11 +19,11 @@ if (tabfound) {
   return (
     <Sidebar className='w-full md:w-56'>
       <Sidebar.ItemGroup>
-        <Link to='/dashboard?tab=profile'>
-        <Sidebar.Item active={tab=== 'profile'} icon={HiUser} label={'user'} labelColor='dark' className='cursor-pointer'>
+        
+        <Sidebar.Item as={Link} to='/dashboard?tab=profile' active={tab=== 'profile'} icon={HiUser} label={'user'} labelColor='dark' className='cursor-pointer'>
           Profile
         </Sidebar.Item>
-        </Link>
+        
         <Sidebar.Item  icon={HiArrowSmRight} className='cursor-pointer' >
           SignOut
         </Sidebar.Item>
