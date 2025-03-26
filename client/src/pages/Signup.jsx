@@ -55,7 +55,7 @@ function Signup() {
       <div className="flex  p-3 max-w-3xl mx-auto flex-col md:flex-row ">
       {/* left */}
       <div className="md:mx-0 mx-auto flex-1 pr-0 md:pr-32">
-      <Link to="/"><img className='relative w-72 sm:w-80' src="/logo.png" alt="" /></Link>
+      <Link to="/"><img className='relative dark:invert w-72 sm:w-80' src="/logo1.svg" alt="" /></Link>
       <p className=' absolute mt-[-50px] ml-[70px] text-md '> Share. Inspire. Connect.</p>
       </div>
       {/* right */}

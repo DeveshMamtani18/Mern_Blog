@@ -17,7 +17,7 @@ import {
         <div className="w-full">
           <div className="grid w-full justify-between sm:flex sm:justify-between md:flex md:grid-cols-1">
             <div>
-             <img className="w-24 sm:w-48" src="/logo.png" alt="" />
+             <img className="dark:invert w-24 sm:w-48" src="/logo1.svg" alt="" />
             </div>
             <div className="grid grid-cols-2 gap-8 sm:mt-4 sm:grid-cols-3 sm:gap-6">
               <div>
